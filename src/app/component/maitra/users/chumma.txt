@@ -1,0 +1,105 @@
+<div class="border rounded shadow-lg align-center p-2">
+        <h1 class="text-center h-2 fs-2 fw-bolder"> Message Page</h1>
+        <form class="theme-form" (ngSubmit)="onSubmit()" #messageform="ngForm">
+          <div class="form-row row">
+            <div class="col-md-10">
+              <div class="container">
+                <div class="row justify">
+                  <div class="col-md-8">
+                    <div class="shadow rounded">
+                      <textarea [(ngModel)]="content" class="form-control z-depth-6" id="editTextArea" rows="5" name="fullname" placeholder="Enter your message here!....." required></textarea>
+                      <div *ngIf="messageform.submitted && messageform.form.controls['content'].errors && messageform.form.controls['content'].errors['required']">
+                        <p>*Message is required</p>
+                      </div>
+                    </div>
+                    <br>
+                    <!-- Radio buttons for notification style -->
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="notificationStyle" 
+                                   [(ngModel)]="selectedNotificationStyle"
+                                   value="glance" 
+                                   id="glanceRadio"
+                                   [disabled]="!notificationChecked">
+                            <label class="form-check-label" for="glanceRadio">Glance</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="notificationStyle" 
+                                   [(ngModel)]="selectedNotificationStyle"
+                                   value="original" 
+                                   id="originalRadio"
+                                   [disabled]="!notificationChecked">
+                            <label class="form-check-label" for="originalRadio">Original</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+        
+                    <!-- Checkboxes for notification type -->
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col">
+                          <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="smsCheckbox" 
+                                   [(ngModel)]="smsChecked"
+                                   id="smsCheckbox">
+                            <label class="form-check-label" for="smsCheckbox">SMS</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="notificationCheckbox" 
+                                   [(ngModel)]="notificationChecked"
+                                   id="notificationCheckbox">
+                            <label class="form-check-label" for="notificationCheckbox">Notification</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              
+              </div>
+              </div>
+            </div>
+          </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                      <button class="btn btn-primary mt-1" type="submit" >Submit</button>
+                      <br>
+                    </div>
+        
+        </form>
+      </div>
+
+
+
+      
+  setDelete(data:any)
+  {
+    this.showNotification("Do you want to delete these fields").subscribe(confirmed => {
+      if (confirmed) {
+    this.http.delete("http://localhost:8888/api/message/delete"+"/"+ data.content).subscribe((resultData:any)=>
+    {
+      console.log(resultData);
+      this.snackBar.open('Deleted Successfully', 'Dismiss', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000); 
+      });
+  }})}

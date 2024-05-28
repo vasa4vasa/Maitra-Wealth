@@ -1,0 +1,100 @@
+<div class="dialog-overlay border rounded shadow-lg">
+    <div class="front bg-light-subtle ">
+<div mat-dialog-title>
+    <h1><b>Edit Calls</b></h1>
+</div>
+<form [formGroup]="callform">
+    <div mat-dialog-content>
+        <div class="row">
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Created On:</mat-label>
+                <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
+                <mat-datetimepicker #datetimePicker type="datetime" mode="portrait"></mat-datetimepicker>
+                <input matInput formControlName="datetime" [matDatetimepicker]="datetimePicker" required autocomplete="true"/>
+              </mat-form-field>
+              
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Call Type:</mat-label>
+                    <mat-select formControlName="callType">
+                        <mat-option value="FUTURE">FUTURE</mat-option>
+                        <mat-option value="CASH">CASH</mat-option>
+                        <mat-option value="PE">PE</mat-option>
+                        <mat-option value="CE">CE</mat-option>
+                    </mat-select>
+            </mat-form-field>
+
+            <div class="col-md-4 mt-3">
+                <mat-label>Type:</mat-label>
+                <mat-radio-group formControlName="type">
+                    <mat-radio-button value="Buy">BUY</mat-radio-button>
+                    <mat-radio-button value="Sell">SELL</mat-radio-button>
+                </mat-radio-group>
+            </div>
+              <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Commodity:</mat-label>
+                    <input matInput name="commodity" formControlName="equity">
+            </mat-form-field>
+              
+
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Contract Month:</mat-label>
+                    <mat-select formControlName="contract">
+                        <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
+                    </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Additional words:</mat-label>
+                <input matInput type="text" formControlName="add_word">
+            </mat-form-field>
+
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Price Type:</mat-label>
+                <mat-select formControlName="priceType">
+                    <mat-option value="AT">AT</mat-option>
+                    <mat-option value="BETWEEN">BETWEEN</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>AT Price:</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0" formControlName="atPrice">
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Target1</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0" formControlName="target1">
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Target2</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0" formControlName="target2">
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Target3</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0" formControlName="target3">
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Stop_Loss</mat-label>
+                    <input matInput type="number" class="example-right-align" placeholder="0" formControlName="stopLoss">
+            </mat-form-field>
+            <div class="row">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>SMS</mat-label>
+                    <textarea matInput placeholder="generate sms" formControlName="lastSMS"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+
+            <div mat-dialog-actions>
+                <div class="row button-container justify-content-center text-center">
+                    <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="cancel()">Clear</button>
+                    <button type="submit" class="btn col text-primary btn-outline-primary mb-2 mx-1" (click)="submitData()">Save</button>
+                    <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</form>
+</div>
+</div>

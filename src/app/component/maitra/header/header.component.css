@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+nav{
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: white;
+}
+
+.navbar-toggler{
+    border: none;
+    font-size: 1.25rem;
+}
+.navbar-toggler:focus{
+    box-shadow: none;
+    outline: none;
+}
+.navbar-nav .nav-link:hover{
+    color: rgb(255, 106, 0) !important;
+  }
+
+.btn:hover{
+    background-color: rgb(255, 106, 0) !important;
+    color: rgb(255, 255, 255) !important;
+  }
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-item:hover .nav-link {
+  color: rgb(255, 106, 0) !important;
+}

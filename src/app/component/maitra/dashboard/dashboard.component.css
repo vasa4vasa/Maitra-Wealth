@@ -1,0 +1,25 @@
+.card-title{
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 100;
+    font-size: larger;
+}
+.down{
+    color: whitesmoke;
+    text-align: center;
+}
+.more{
+    color: whitesmoke;
+    text-decoration: none;
+    text-align: center;
+}
+i{
+    color: whitesmoke;
+}
+#dash{
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+}

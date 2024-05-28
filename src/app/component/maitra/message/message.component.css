@@ -1,0 +1,19 @@
+#message{
+    font-size: 28px;
+    font-weight: 800;}
+    .check, .rad{
+        font-size: medium;
+    }
+    .lab{
+        font-weight: 400;
+        font-size: medium;
+        margin-top: 2px;
+    }
+    .history{
+        font-weight: 800;
+        font-size: 20px;
+        margin-top: 2px;
+    }
+    th{
+        font-size: 18px;
+    }

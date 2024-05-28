@@ -1,0 +1,5 @@
+One signal ID : 594aafc7-75b7-4623-be49-dafc0270fedf
+Subscription ID: bcb0558e-635c-42b3-b6c2-e335999499f7v
+
+One signal API key : ZmJkMDNiODgtNTI4OC00NGExLTkwYmUtZTRhZGY5OWU5NjAy
+One Signal App Id : 256cfce6-82e6-4810-9300-b421cf4ed03b

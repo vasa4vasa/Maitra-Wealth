@@ -1,0 +1,150 @@
+
+<div id="who">
+<div class="container-fluid mx-0 mt-3">
+  <!-- First Row -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-12">
+      <div class="border rounded shadow-lg align-center p-2">
+        <nav class="navbar navbar-expand">
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-4">
+              <li class="nav-item ml-auto mr-1 text-dark">
+                <span class="" id="users">USER DETAILS</span>
+              </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item position-right text-dark">
+                <select (change)="onDropdownChange($event)" class="p-2 me-5">
+                  <option value="all" selected>All Users</option>
+                  <option value="todaySubscribers">Today Subscribed Users</option>
+                  <option value="totalSubscribers">Total Subscribers</option>
+                  <option value="todayExpiredUsers">Today Expired Users</option>
+                  <option value="totalExpiredUsers">Non Subscribers</option>
+                </select>
+              </li>
+              <button mat-raised-button class="btn btn-success bg-success p-4 border border-success-subtle me-5 text-light" (click)="addusers()">Create New +</button>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add these lines to your index.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+
+<!-- Second Container -->
+<div class="container-fluid mx-0 mt-3">
+  <div class="row g-4 justify-content-center">
+    <div class="col-md-12">
+      <div class="border rounded shadow-lg align-center p-2">
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="card bg-light-subtle border border-dark-subtle">
+              <div class="card-body text-center bgr bg-warning">
+                <p class="card-title">Total Users : {{totalUsersCount}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light-subtle border border-dark-subtle">
+              <div class="card-body text-center bgr bg-warning">
+                <p class="card-title">Today Subscribers :{{toSubscribersCount}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light-subtle border border-dark-subtle">
+              <div class="card-body text-center bgr bg-warning">
+                <p class="card-title">Total Subscribers :{{totalSubscribersCount}} </p>
+                <!-- {{gettotalsubscribers()}} -->
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-light-subtle border border-dark-subtle ">
+              <div class="card-body text-center bgr bg-warning">
+                <p class="card-title ">NonSubscribers :{{totalExpiredUsersCount}} </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="w-100 h-100 p-3">
+  <!-- Outer Container for Table -->
+  <div class="w-100 h-100 border rounded shadow-lg align-center pt-3 pb-2 ps-1 pe-1">
+    <!-- Inner container for table -->
+    <div class="table-responsive">
+      <!-- Table uses the datatables which is defaultly used in Angular -->
+      <table #tabledata id="tabledata" datatable  [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" mat-table  class="table mt-5 table-hover table-borderless text-center mat-elevation-z8" [formGroup]="userform">
+        <!-- Table Head -->
+        <thead class="border-bottom">
+          <!-- First row -->
+          <tr class="p-3">
+            <!-- Table Headings -->
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">ID</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Name</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Email ID</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Mobile Number</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">App Installed Date</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">App Expired Date</th>
+            <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">Actions</th>
+          </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody>
+          <!-- this table row uses the for loop for fetching the data from the object -->
+          <tr class=" " *ngFor="let useritem of UsersArray">
+            <!-- This table data for the Users ID, it fetches the data from the useritem obj using the column name of the DB-->
+            <td class="p-2  border border-1 border-opacity-10 justify-item-center" scope="row">{{useritem.ID}}</td>
+        <!-- This table data for the Users Name-->
+        <td class= "p-2  border border-1 border-opacity-10">{{useritem.UserName}}<br>
+        <input type="text" class="form-control mt-2"  [value]="useritem.UserName" *ngIf="idToShow === useritem.ID && isEditClicked[useritem.ID]" formControlName="UserNameUpdate" [(ngModel)]="UserNameUpdate"/>
+        </td>
+        <!-- Here I uses the *ngif for unhide the input field when I click the Edit Button -->
+        <td class= "p-2  border border-1 border-opacity-10" >{{useritem.UserEmail }}<br>
+          <input type="text" class="form-control mt-2"  [value]="useritem.UserEmail" *ngIf="idToShow === useritem.ID && isEditClicked[useritem.ID]" formControlName="UserEmailUpdate" [(ngModel)]="UserEmailUpdate"/>
+        </td>
+        <!-- Each Button in the row are responsed by the the row Id -->
+        <td class= "p-2  border border-1 border-opacity-10" >{{useritem.UserMobileNo}}<br>
+          <input type="text" class="form-control mt-2"  [value]="useritem.UserMobileNo " *ngIf="idToShow === useritem.ID && isEditClicked[useritem.ID]" formControlName="UserMobileNoUpdate" [(ngModel)]="UserMobileNoUpdate"/></td>
+          <!-- isEditClicked used to visible and invisible the input field -->
+        <td class= "p-2  border border-1 border-opacity-10" >{{useritem.AppInstalledDate }}<br>
+          <input type="date" class="form-control mt-2"  [value]="useritem.AppInstalledDate" *ngIf="idToShow === useritem.ID && isEditClicked[useritem.ID]" [(ngModel)]="AppInstalledUpdate" formControlName="AppInstalledUpdate"/>
+        </td>
+      
+        <td class= "p-2  border-1 border-opacity-10" >{{useritem.AppExipiredDate }}<br>
+          <input type="date" class="form-control mt-2"  [value]="useritem.AppExipiredDate"*ngIf="idToShow === useritem.ID && isEditClicked[useritem.ID]" [(ngModel)]="AppExpiredUpdate"  formControlName="AppExpiredUpdate"/>
+        </td>
+  
+          <!-- this row has a three buttons submit and delete are works vice versa. showtableData() used for visible and in visible the input field -->
+         
+<td class="p-2 border border-1 border-opacity-10">
+  <button type="button" class="btn btn-success mt-2" (click)="showTableData(useritem.ID)" *ngIf="!isEditClicked[useritem.ID]">
+      <span><i class="bi bi-pencil-square"></i></span>
+</button>
+
+  <button type="button" class="btn btn-dark ms-2 mt-2" *ngIf="isEditClicked[useritem.ID]" (click)="shows(useritem.ID)"> <span><i class="bi bi-x-lg"></i></span></button> 
+  <button type="button" class="btn btn-primary ms-2 mt-2" *ngIf="isEditClicked[useritem.ID]" (click)="UpdateRecords(useritem)"> <i class="bi bi-send"></i></button>
+  <button type="button" class="btn btn-danger ms-2 mt-2" *ngIf="!isEditClicked[useritem.ID]" (click)="setDelete(useritem)"> <span><i class="bi bi-trash"></i></span></button>
+</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+</div>
+</div>
+
+  
+  
+  

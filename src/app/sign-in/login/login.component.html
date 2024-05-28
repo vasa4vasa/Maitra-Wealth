@@ -1,0 +1,47 @@
+<form (ngSubmit)="onSubmit()">
+    <!--Main Container-->
+
+     <div class="container d-flex justify-content-center align-items-center min-vh-100 login-container">
+
+    <!--Login Container-->
+
+       <div class="row border p-3 bg-white shadow box-area login-box">
+
+    <!--Left Box-->
+
+       <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style="background: #ffffff;">
+           <div class="featured-image mb-3">
+            <img src="assets/thumbb.png" class="img-fluid" style="object-fit: cover;">
+           </div>
+       </div> 
+
+    <!--Right Box-->
+        
+       <div class="col-md-6 right-box">
+          <div class="row align-items-center">
+                <div class="header-text mb-4">
+                     <h2 style="font-size: 30px;font-weight: bold;">Hello</h2>
+                </div>
+                <div class="input-group mb-3">
+                    <input name="UserEmail" type="email" [(ngModel)]="UserEmail" class="form-control form-control-lg bg-light fs-6" placeholder="Email address">
+                    <div class="invalid-feedback d-block">{{ emailError }}</div>
+                </div>
+                <div class="input-group mb-1">
+                    <input name="Password" type="password" [(ngModel)]="Password" class="form-control form-control-lg bg-light fs-6" placeholder="Password">
+                    <div class="invalid-feedback d-block">{{ passwordError }}</div>
+                </div>
+                <div class="input-group mb-5 d-flex justify-content-end forgot">
+                    <small><a [routerLink]="['/forgot-password']">Forgot Password?</a></small>
+                </div>
+                <div class="input-group mb-3">
+                    <button type="submit" class="btn btn-lg btn-warning w-100 fs-6 ">Login</button>
+                    <div *ngIf="serverError" class="alert alert-danger mt-3">{{ serverError }}</div>
+                </div>
+    
+          </div>
+       </div> 
+
+      </div>
+    </div>
+  </form>
+

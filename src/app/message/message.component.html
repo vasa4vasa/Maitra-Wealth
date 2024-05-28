@@ -1,0 +1,115 @@
+<div class="w-100 h-100 p-4">
+    <div class= " p-2 align-center">
+    
+    <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
+    
+      
+    <div class="shadow p-6 mb-6 rounded" >
+    
+      <div class="p-3 mb-4 ">
+     
+      <div class="row-md-20">
+        <div class="col-md-20">
+       
+        
+          <h1 class="text-center"> Message Page</h1>
+          </div>
+        </div>
+        </div>
+        </div>
+    
+      
+     
+    <div class="shadow p-6 mb-6 rounded" >
+    
+      <div class="p-3 mb-4 ">
+     
+      <div class="row-md-20">
+        <div class="col-md-20 align-center">
+    
+          <form class="theme-form"  (ngSubmit)="onSubmit()">
+            <div class="form-row row">
+                <div class="col-md-10">
+                 
+                  
+                   
+                    <h4>Enter your message here!</h4><br>
+                    <div class ="row">
+                      <div class ="col-md-20">
+              </div>
+    
+                    <textarea [(ngModel)]="message" class="form-control mb-2" id="editTextArea" name="fullname" placeholder="Start typing..."></textarea>
+                </div>
+                </div><br><br>
+                <div class ="col-12">
+                <button class=" btn  btn-primary " type="submit" >submit</button>
+              <br><br></div>
+         
+    
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="radio" name="glance" id="glance" value="Glance">
+            <label class="form-check-label" for="glance">Glance</label>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="radio" name="original" id="original" value="Original">
+            <label class="form-check-label" for="original">Original</label>
+          </div>
+    </div></form>
+         
+         
+           <h4>Export your message as</h4><br>
+           <div class="d-grid gap-2 d-md-flex ">
+           <!-- <a class="btn btn-primary" href="#" role="button">Link</a> -->
+    
+      
+    
+    
+        
+        </div>
+        <div class="from-group mt-3 mb-3">
+          <h2 class="text-center">Message History</h2>
+          <div class ="container">
+            <div class="card-body">
+              <div class="card-body">
+          <table datatable [dtOptions]="dtOption"  class="table table-bordered"> 
+    
+              <!-- datatable[dtOptions]="dtOptions"   -->
+              
+            <thead class="bg-dark text-white">
+              <tr>
+                <th><h4 class="text-center">S.No</h4></th>
+                <th ><h4 class ="text-center">Message</h4></th>
+                <th><h4 class ="text-center">Date-Time</h4></th>
+                <th><h4 class="text-center">Edit the Table</h4></th>
+             
+               
+               
+              </tr>
+              </thead>
+              <tbody>
+          
+            <tr *ngFor="let messageitem of messageArray">
+              <td class="text-center">{{messageitem.SNo}}</td>
+              <td class="text-center">{{ messageitem.message }}</td>
+            <td class="text-center">{{ messageitem.Date}}</td>
+            
+         <td>
+          <button type ="button" class="btn btn-success" (click)="setUpdate(messageitem)">Edit</button>
+          <button type ="button" class="btn btn-danger" (click)="setDelete(messageitem)">Delete</button>
+    
+             </td>
+            
+          </tr>  </tbody></table> 
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+        
+        

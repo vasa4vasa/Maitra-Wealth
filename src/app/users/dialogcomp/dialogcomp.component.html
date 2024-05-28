@@ -1,0 +1,51 @@
+<div class="dialog-overlay border rounded shadow-lg">
+    <div class="front bg-light-subtle ">
+<div mat-dialog-title>
+    <h1><b>Add Users</b></h1>
+</div>
+<form [formGroup]="userform" >
+    <div mat-dialog-content>
+        <div class="row">
+            <mat-form-field class="col-md-4" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" placeholder="Name" formControlName="Name" [(ngModel)]="Name">
+                <mat-error *ngIf="userform.get('Name')?.hasError('required')">Name is required</mat-error>
+            </mat-form-field>
+            
+            <mat-form-field class="col-md-4" appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" placeholder="Email" formControlName="Email" [(ngModel)]="Email">
+                <mat-error *ngIf="userform.get('Email')?.hasError('required')">Email is required</mat-error>
+                <mat-error *ngIf="userform.get('Email')?.hasError('email')">Invalid email address</mat-error>
+            </mat-form-field>
+            
+            <mat-form-field class="col-md-4" appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input matInput type="text" placeholder="MobileNumber" formControlName="MobileNumber" [(ngModel)]="MobileNumber">
+                <mat-error *ngIf="userform.get('MobileNumber')?.hasError('required')">Mobile Number is required</mat-error>
+                <mat-error *ngIf="userform.get('MobileNumber')?.hasError('pattern')">Invalid mobile number (should be 10 digits)</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Subscribed Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="SubDate" [value]="curDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="col-md-4 mt-3" appearance="outline">
+                <mat-label>Expired Date</mat-label>
+                <input matInput [matDatepicker]="datepicker" formControlName="ExpDate" [value]="expireDate">
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <div class="row button-container justify-content-center text-center">
+            <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="cancel()">Clear</button>
+            <button type="submit" class="btn col text-primary btn-outline-primary mb-2 mx-1" (click)="submitData()">Save</button>
+            <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="close()">Close</button>
+        </div>
+    </div>
+</form>
+</div>
+</div>

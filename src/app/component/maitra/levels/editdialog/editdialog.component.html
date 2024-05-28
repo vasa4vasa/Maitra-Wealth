@@ -1,0 +1,55 @@
+<div mat-dialog-title>
+    <h1>Edit Levels</h1>
+</div>
+<form [formGroup]="empform">
+    <div mat-dialog-content>
+        <div class="row">
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>TV</mat-label>
+                <input matInput name="TV" formControlName="TV" placeholder="TV">
+              </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>SN</mat-label>
+                <input matInput name="SN" formControlName="SN" placeholder="SN">
+              </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>MN</mat-label>
+                <input matInput type="text" placeholder="MN" formControlName="MN">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>R1</mat-label>
+                <input matInput type="text" placeholder="R1" formControlName="R1" value="{{this.R1a}}">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>R2</mat-label>
+                <input matInput type="email" placeholder="R2" formControlName="R2" value="{{this.R2a}}">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>R3</mat-label>
+                <input matInput type="text" placeholder="R3" formControlName="R3" value="{{this.R3a}}">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>S1</mat-label>
+                <input matInput type="text" placeholder="S1" formControlName="S1" value="{{this.S1a}}">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>S2</mat-label>
+                <input matInput type="S2" placeholder="S2" formControlName="S2" value="{{this.S2a}}">
+            </mat-form-field>
+            <mat-form-field class="col-md-3" appearance="outline">
+                <mat-label>S3</mat-label>
+                <input matInput type="text" placeholder="S3" formControlName="S3" value="{{this.S3a}}">
+            </mat-form-field>
+           
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <div class="row button-container justify-content-center text-center">
+            <button type="submit" class="btn col text-primary btn-outline-primary mb-2 mx-1" (click)="submitData()">Save</button>
+            <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="cancel()">Cancel</button>
+            <button class="btn col text-primary text-dark btn-outline-dark mb-2 mx-1" (click)="close()">Close</button>
+            
+        </div>
+    </div>  
+</form>
+

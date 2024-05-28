@@ -1,0 +1,135 @@
+<div style="margin-top: 100px;">
+  <script src="path/to/jquery.min.js"></script>
+  <div class="container-fluid mx-0 mt-3">
+    <div class="row g-4 row justify-content-center"> <!-- Adjusted justify-content-center -->
+      <div class="col-md-12">
+        <div class="border rounded shadow-lg align-center p-2">
+          <h1 class="text-center fs-2 fw-bolder mb-3 mt-3">Message Page</h1>
+          <form class="theme-form" (ngSubmit)="onSubmit()" #messageform="ngForm">
+            <div class="form-row row">
+              <div class="col-md-10">
+                <div class="container">
+                  <div class="row justify-content-between">
+                    <div class="col-md-8">
+                      <div class="shadow rounded">
+                        <textarea [(ngModel)]="content" class="form-control z-depth-6" id="editTextArea" rows="5" name="fullname" placeholder="Enter your message here!....." required></textarea>
+                        <div *ngIf="messageform.submitted && messageform.form.controls['content'].errors && messageform.form.controls['content'].errors['required']">
+                          <p>*Message is required</p>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                    <!-- Adjusted radio buttons and checkboxes layout -->
+                    <div class="col-md-4">
+                      <div class="row mt-4 ms-4">
+                        <div class="col">
+                          <!-- Checkboxes for notification type -->
+                          <div class="form-check">
+                            <input class="form-check-input check" 
+                                   type="checkbox" 
+                                   name="smsCheckbox" 
+                                   [(ngModel)]="smsChecked"
+                                   id="smsCheckbox">
+                            <label class="form-check-label lab" for="smsCheckbox">SMS</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input check" 
+                                   type="checkbox" 
+                                   name="notificationCheckbox" 
+                                   [(ngModel)]="notificationChecked"
+                                   id="notificationCheckbox">
+                            <label class="form-check-label lab" for="notificationCheckbox">Notification</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <!-- Radio buttons for notification style -->
+                          <div class="form-check">
+                            <input class="form-check-input rad" 
+                                   type="radio" 
+                                   name="notificationStyle" 
+                                   [(ngModel)]="selectedNotificationStyle"
+                                   value="glance" 
+                                   id="glanceRadio"
+                                   [disabled]="!notificationChecked">
+                            <label class="form-check-label lab" for="glanceRadio">Glance</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input rad" 
+                                   type="radio" 
+                                   name="notificationStyle" 
+                                   [(ngModel)]="selectedNotificationStyle"
+                                   value="original" 
+                                   id="originalRadio"
+                                   [disabled]="!notificationChecked">
+                            <label class="form-check-label lab" for="originalRadio">Original</label>
+                          </div>
+                        </div>
+                        <div>
+                          <!-- Button aligned to the center -->
+           <div class="col-6 d-flex "> <!-- Adjusted justify-content-center -->
+             <button class="btn btn-primary mt-2" type="submit">Submit</button>
+             <br>
+           </div>
+                       </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mx-0 mt-3">
+  <div class="row g-4 row justify-content-center"> <!-- Adjusted justify-content-center -->
+    <div class="col-md-12">
+          <div class="border rounded shadow-lg align-center pt-3 pb-2 ps-1 pe-1">
+            <h2 class="text-center history">Message History</h2>
+
+            <div class="table-responsive">
+              <table datatable [dtOptions]="dtOption" [dtTrigger]="dtTrigger" class="table mt-5 table-hover table-borderless text-center mat-elevation-z8">
+                
+                <thead class="border-bottom">
+                  <tr class="p-3">
+                    <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">ID</th>
+                    <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">Message</th>
+                    <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">Date&Time</th>
+                    <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let messageitem of messageArray">
+                    <td class="p-2 border border-1 border-opacity-10 justify-item-center" scope="row">{{messageitem.id}}</td>
+                    <td class="p-2 border border-1 border-opacity-10">{{ messageitem.content }}<br>
+                      <input type="text" class="form-control mt-2" value="{{messageitem.content}}" *ngIf="isEditClicked[messageitem.id]" [(ngModel)]="messageUpdate"/>
+                    </td>
+                    <td class="p-2 border border-1 border-opacity-10">{{ transformDate(messageitem.date )}}</td>
+                    <td class="p-2 border border-1 border-opacity-10">
+                      <button type="button" class="btn btn-success mt-2" (click)="showTableData(messageitem.id)" *ngIf="!isEditClicked[messageitem.id]">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button type="button" class="btn btn-dark ms-2 mt-2" *ngIf="isEditClicked[messageitem.id]" (click)="shows(messageitem.id)">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                      <button type="button" class="btn btn-primary ms-2 mt-2" *ngIf="isEditClicked[messageitem.id]" (click)="UpdateRecords(messageitem)">
+                        <i class="bi bi-send"></i>
+                      </button>
+                      <button type="button" class="btn btn-danger ms-2 mt-2" *ngIf="!isEditClicked[messageitem.id]" (click)="setDelete(messageitem)">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+

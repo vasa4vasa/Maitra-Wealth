@@ -1,0 +1,927 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {DataTableDirective} from 'angular-datatables';
+import { Observable, Subject } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DialogModule } from '@angular/cdk/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DialogcompComponent } from './dialogcomp/dialogcomp.component';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrl: './users.component.css'
+})
+
+
+export class UsersComponent implements OnInit{
+
+  UsersArray : any[] = [];
+  tosubscribers : any[] =[];
+  totasubscribers : any;
+  toexpiredusers : any;
+
+  isResultLoaded = false;
+
+  UserNameUpdate: any;
+  UserEmailUpdate: any;
+  UserMobileNoUpdate: any;
+
+  currentUserID : any ;
+  currentUserName : any ;
+  currentMobileNo : any ;
+  currentEmail : any ;
+
+  idToShow : any;
+  isTextboxVisible: boolean = false;
+
+  dtoptions : DataTables.Settings= {} ;
+  dtTrigger: Subject<any> = new Subject<any>;
+
+  isEditClicked: { [key: number]: boolean } = {};
+
+
+  isRowInEditMode: { [key: number]: boolean } = {};
+
+
+  @ViewChild(DataTableDirective, {static: false})
+datatableElement: any = DataTableDirective;
+
+  constructor(private http: HttpClient, private dialog : MatDialog ) 
+  {
+    this.getallusers();
+    // this.todaysubscribers();
+    // this.totalsubscribers();
+    // this.todayexpiredusers();
+    // this.totalexpiredusers();
+    
+  }
+
+  gettosubscribers():any{
+    return this.tosubscribers.length;
+  }
+
+  
+
+
+  ngOnInit(): void {
+    this.dtTrigger.next(this.UsersArray); // Trigger DataTable initialization
+    this.dtoptions={
+
+      lengthChange:true,
+      dom: 'Bfrltip',
+      pagingType:"full_numbers"
+    
+    }
+  }
+
+
+
+
+  onDropdownChange(event: any) {
+    const selectedOption = event.target.value;
+
+    switch (selectedOption) {
+      case 'todaySubscribers':
+        this.todaysubscribers();
+        break;
+      case 'totalSubscribers':
+        this.totalsubscribers();
+        break;
+      case 'todayExpiredUsers':
+        this.todayexpiredusers();
+        break;
+      case 'totalExpiredUsers':
+        this.totalexpiredusers();
+        break;
+      default:
+        this.getallusers();
+        break;
+    }
+  }
+
+
+  
+  getallusers()
+  { 
+    this.http.get("http://localhost:8888/api/allusers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(null);
+    });
+  }
+  
+  
+  ngAfterViewInit(): void {
+    this.dtTrigger.next(this.UsersArray);
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+
+  // todaysubscribers()
+  // { 
+  //   this.http.get("http://localhost:8888/api/todaysubscribedusers")
+  //   .subscribe((resultData: any)=>
+  //   {
+  //       this.isResultLoaded = true;
+  //       console.log(resultData.data);
+  //       this.UsersArray = resultData.data;
+  //       this.dtTrigger.next(resultData);
+  //       this.tosubscribers = resultData.data;
+  //   });
+  // }
+
+  todaysubscribers() {
+    this.dtTrigger.unsubscribe(); // Unsubscribe to destroy the DataTable
+    this.http.get("http://localhost:8888/api/todaysubscribedusers")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(this.UsersArray); // Trigger DataTable initialization
+        this.tosubscribers = resultData.data;
+      });
+  }
+  
+
+  totalsubscribers()
+  { 
+    this.dtTrigger.unsubscribe();
+    this.http.get("http://localhost:8888/api/totalsubscribers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+
+
+  todayexpiredusers()
+  { 
+    this.http.get("http://localhost:8888/api/todayexpiredusers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+  
+  totalexpiredusers()
+  { 
+    this.http.get("http://localhost:8888/api/totalexpiredusers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+
+
+  getUserCount(): number {
+    return this.UsersArray.length;
+  }
+
+  showTableData(ID: any): void {
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+  }
+
+  shows(ID: any): void{
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+
+
+  }
+
+
+  UpdateRecords(useritem : any)
+  {
+    this.currentUserID = useritem.ID;
+  this.currentUserName = useritem.UserName;
+  this.currentEmail = useritem.UserEmail;
+  this.currentMobileNo = useritem.UserMobileNo;
+
+   // Check if the update values are null or undefined
+   this.UserNameUpdate = this.UserNameUpdate === null || this.UserNameUpdate === undefined ? this.currentUserName : this.UserNameUpdate;
+   this.UserEmailUpdate = this.UserEmailUpdate === null || this.UserEmailUpdate === undefined ? this.currentEmail : this.UserEmailUpdate;
+   this.UserMobileNoUpdate = this.UserMobileNoUpdate === null || this.UserMobileNoUpdate === undefined ? this.currentMobileNo : this.UserMobileNoUpdate;
+ 
+      alert("Are you want to Update these fields");
+    let bodyData = 
+    {
+      "UserName" : this.UserNameUpdate,
+      "UserEmail" : this.UserEmailUpdate,
+      "UserMobileNo" : this.UserMobileNoUpdate
+    };
+    this.http.put("http://localhost:8888/api/user/update"+ "/"+ this.currentUserID,bodyData).subscribe((resultData: any)=>
+    {
+        console.log(resultData);
+        alert("User Details Updated")
+    });
+  }
+
+
+ 
+  setDelete(useritem: any)
+  {
+    this.http.delete("http://localhost:8888/api/user/delete/"+ useritem.ID).subscribe((resultData: any)=>
+    {
+      alert("Are you want to delete these fields");
+        console.log(resultData);
+    });
+  }
+
+  addusers(){
+    this.Openpopup(DialogcompComponent);
+  }
+
+
+  Openpopup(component:any) {
+    var _popup = this.dialog.open(component, {
+      width: '60%',
+      enterAnimationDuration: '1000ms',
+      exitAnimationDuration: '1000ms',
+      // data: {
+      //   title: title,
+      //   code: code
+      // }
+    });
+  //   _popup.afterClosed().subscribe(item => {
+  //     // console.log(item)
+  //     this.loadcustomer();
+  //   })
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DataTableDirective } from 'angular-datatables';
+import { Observable, Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogcompComponent } from './dialogcomp/dialogcomp.component';
+
+declare var $: any; // Declare jQuery
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.css']
+})
+export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
+  UsersArray: any[] = [];
+  tosubscribers: any[] = [];
+  totasubscribers: any;
+  toexpiredusers: any;
+
+  isResultLoaded = false;
+
+  UserNameUpdate: any;
+  UserEmailUpdate: any;
+  UserMobileNoUpdate: any;
+
+  currentUserID: any;
+  currentUserName: any;
+  currentMobileNo: any;
+  currentEmail: any;
+
+  idToShow: any;
+  isTextboxVisible: boolean = false;
+
+  dtoptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
+
+  isEditClicked: { [key: number]: boolean } = {};
+
+  isRowInEditMode: { [key: number]: boolean } = {};
+
+  @ViewChild(DataTableDirective, { static: false })
+  datatableElement: DataTableDirective | undefined;
+
+  constructor(private http: HttpClient, private dialog: MatDialog, private chRef: ChangeDetectorRef) {
+    // this.getallusers();
+    // this.todaysubscribers();
+    // this.totalsubscribers();
+    // this.todayexpiredusers();
+    // this.totalexpiredusers();
+  }
+
+  gettosubscribers(): any {
+    return this.tosubscribers.length;
+  }
+
+  ngOnInit(): void {
+    this.dtoptions = {
+      lengthChange: true,
+      dom: 'Bfrltip',
+      pagingType: 'full_numbers'
+    };
+  
+    // Unsubscribe if DataTable already initialized
+    if (this.dtTrigger) {
+      this.dtTrigger.unsubscribe();
+    }
+  }
+
+  
+
+  onDropdownChange(event: any) {
+    const selectedOption = event.target.value;
+
+    switch (selectedOption) {
+      case 'todaySubscribers':
+        this.todaysubscribers();
+        break;
+      case 'totalSubscribers':
+        this.totalsubscribers();
+        break;
+      case 'todayExpiredUsers':
+        this.todayexpiredusers();
+        break;
+      case 'totalExpiredUsers':
+        this.totalexpiredusers();
+        break;
+      default:
+        this.getallusers();
+        break;
+    }
+  }
+
+
+  // getallusers()
+  // { 
+  //   this.http.get("http://localhost:8888/api/allusers/")
+  //   .subscribe((resultData: any)=>
+  //   {
+  //       this.isResultLoaded = true;
+  //       console.log(resultData.data);
+  //       this.UsersArray = resultData.data;
+  //       this.dtTrigger.next(this.UsersArray);
+  //   });
+  // }
+
+  getallusers() { 
+    this.http.get("http://localhost:8888/api/allusers/")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+  
+        // Trigger DataTable update only if dtTrigger is defined
+        if (this.dtTrigger) {
+          this.dtTrigger.next(this.UsersArray);
+        }
+      });
+  }
+
+  ngAfterViewInit(): void {
+    // this.getallusers(); // Fetch data first
+
+    // if (this.dtTrigger) {
+    //   this.dtTrigger.unsubscribe();
+    // }
+    // this.chRef.detectChanges(); // Trigger change detection
+
+    // if ($.fn.DataTable.isDataTable('#tabledata')) {
+    //   $('#tabledata').DataTable().destroy();
+    // }
+
+    // $('#tabledata').DataTable(this.dtoptions); // Initialize DataTable
+  
+    // // Unsubscribe if DataTable already initialized
+    
+  
+    // // Trigger DataTable initialization
+    // this.dtTrigger.next(null);
+
+    if ($.fn.DataTable.isDataTable('#tabledata')) {
+      $('#tabledata').DataTable().destroy();
+    }
+  
+    this.getallusers(); // Fetch data first
+  
+    // Unsubscribe if DataTable already initialized
+    if (this.dtTrigger) {
+      this.dtTrigger.unsubscribe();
+    }
+  
+    this.chRef.detectChanges(); // Trigger change detection
+  
+    this.dtTrigger = new Subject(); // Recreate the dtTrigger Subject
+  
+    // Initialize DataTable after the data is loaded
+    $('#tabledata').DataTable(this.dtoptions); 
+  
+    // Trigger DataTable initialization
+    this.dtTrigger.next(null);
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+  
+  // Other methods...
+
+  todaysubscribers() {
+    this.dtTrigger.unsubscribe(); // Unsubscribe to destroy the DataTable
+    this.http.get('http://localhost:8888/api/todaysubscribedusers').subscribe((resultData: any) => {
+      this.isResultLoaded = true;
+      console.log(resultData.data);
+      this.UsersArray = resultData.data;
+      this.dtTrigger.next(resultData); // Trigger DataTable update
+      this.tosubscribers = resultData.data;
+    });
+  }
+
+  totalsubscribers()
+  { 
+    this.dtTrigger.unsubscribe();
+    this.http.get("http://localhost:8888/api/totalsubscribers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+
+
+  todayexpiredusers()
+  { 
+    this.http.get("http://localhost:8888/api/todayexpiredusers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+  
+  totalexpiredusers()
+  { 
+    this.http.get("http://localhost:8888/api/totalexpiredusers/")
+    .subscribe((resultData: any)=>
+    {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(resultData);
+    });
+  }
+
+  
+  UpdateRecords(useritem : any)
+  {
+    this.currentUserID = useritem.ID;
+  this.currentUserName = useritem.UserName;
+  this.currentEmail = useritem.UserEmail;
+  this.currentMobileNo = useritem.UserMobileNo;
+
+   // Check if the update values are null or undefined
+   this.UserNameUpdate = this.UserNameUpdate === null || this.UserNameUpdate === undefined ? this.currentUserName : this.UserNameUpdate;
+   this.UserEmailUpdate = this.UserEmailUpdate === null || this.UserEmailUpdate === undefined ? this.currentEmail : this.UserEmailUpdate;
+   this.UserMobileNoUpdate = this.UserMobileNoUpdate === null || this.UserMobileNoUpdate === undefined ? this.currentMobileNo : this.UserMobileNoUpdate;
+ 
+      alert("Are you want to Update these fields");
+    let bodyData = 
+    {
+      "UserName" : this.UserNameUpdate,
+      "UserEmail" : this.UserEmailUpdate,
+      "UserMobileNo" : this.UserMobileNoUpdate
+    };
+    this.http.put("http://localhost:8888/api/user/update"+ "/"+ this.currentUserID,bodyData).subscribe((resultData: any)=>
+    {
+        console.log(resultData);
+        alert("User Details Updated")
+    });
+  }
+
+
+ 
+  setDelete(useritem: any)
+  {
+    this.http.delete("http://localhost:8888/api/user/delete/"+ useritem.ID).subscribe((resultData: any)=>
+    {
+      alert("Are you want to delete these fields");
+        console.log(resultData);
+    });
+  }
+
+  getUserCount(): number {
+    return this.UsersArray.length;
+  }
+
+  showTableData(ID: any): void {
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+  }
+
+  shows(ID: any): void{
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+
+
+  }
+
+  // Other methods...
+
+  addusers() {
+    this.Openpopup(DialogcompComponent);
+  }
+
+  Openpopup(component: any) {
+    var _popup = this.dialog.open(component, {
+      width: '60%',
+      enterAnimationDuration: '1000ms',
+      exitAnimationDuration: '1000ms',
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogcompComponent } from './dialogcomp/dialogcomp.component';
+
+@Component({
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.css']
+})
+export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
+  UsersArray: any[] = [];
+  tosubscribers: any[] = [];
+  totasubscribers: any;
+  toexpiredusers: any;
+
+  isResultLoaded = false;
+
+  UserNameUpdate: any;
+  UserEmailUpdate: any;
+  UserMobileNoUpdate: any;
+
+  currentUserID: any;
+  currentUserName: any;
+  currentMobileNo: any;
+  currentEmail: any;
+
+  idToShow: any;
+  isTextboxVisible: boolean = false;
+
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
+
+  isEditClicked: { [key: number]: boolean } = {};
+
+  isRowInEditMode: { [key: number]: boolean } = {};
+
+  @ViewChild(DataTableDirective, { static: false })
+  datatableElement: DataTableDirective | undefined;
+
+  constructor(private http: HttpClient, private dialog: MatDialog, private chRef: ChangeDetectorRef) {}
+
+  gettosubscribers(): any {
+    return this.tosubscribers.length;
+  }
+
+  ngOnInit(): void {
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10, // Adjust as needed
+      serverSide: false,
+    };
+
+    // Unsubscribe if DataTable already initialized
+    if (this.dtTrigger) {
+      this.dtTrigger.unsubscribe();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.datatableElement) {
+      this.datatableElement.dtOptions = this.dtOptions;
+    }
+
+    this.getallusers();
+  }
+
+  ngOnDestroy(): void {
+    // Do not forget to unsubscribe the event
+    this.dtTrigger.unsubscribe();
+  }
+
+  onDropdownChange(event: any) {
+    const selectedOption = event.target.value;
+
+    switch (selectedOption) {
+      case 'todaySubscribers':
+        this.todaysubscribers();
+        break;
+      case 'totalSubscribers':
+        this.totalsubscribers();
+        break;
+      case 'todayExpiredUsers':
+        this.todayexpiredusers();
+        break;
+      case 'totalExpiredUsers':
+        this.totalexpiredusers();
+        break;
+      default:
+        this.getallusers();
+        break;
+    }
+  }
+
+  getallusers() {
+    this.http.get("http://localhost:8888/api/allusers/")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+
+        // Trigger DataTable update only if dtTrigger is defined
+        if (this.dtTrigger) {
+          this.dtTrigger.next(this.UsersArray);
+        }
+      });
+  }
+
+  todaysubscribers() {
+    this.http.get('http://localhost:8888/api/todaysubscribedusers').subscribe((resultData: any) => {
+      this.isResultLoaded = true;
+      console.log(resultData.data);
+      this.UsersArray = resultData.data;
+      this.dtTrigger.next(this.UsersArray);
+      this.tosubscribers = resultData.data;
+    });
+  }
+
+  totalsubscribers() {
+    this.http.get("http://localhost:8888/api/totalsubscribers/")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(this.UsersArray);
+      });
+  }
+
+  todayexpiredusers() {
+    this.http.get("http://localhost:8888/api/todayexpiredusers/")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(this.UsersArray);
+      });
+  }
+
+  totalexpiredusers() {
+    this.http.get("http://localhost:8888/api/totalexpiredusers/")
+      .subscribe((resultData: any) => {
+        this.isResultLoaded = true;
+        console.log(resultData.data);
+        this.UsersArray = resultData.data;
+        this.dtTrigger.next(this.UsersArray);
+      });
+  }
+
+  UpdateRecords(useritem: any) {
+    this.currentUserID = useritem.ID;
+    this.currentUserName = useritem.UserName;
+    this.currentEmail = useritem.UserEmail;
+    this.currentMobileNo = useritem.UserMobileNo;
+
+    // Check if the update values are null or undefined
+    this.UserNameUpdate = this.UserNameUpdate === null || this.UserNameUpdate === undefined ? this.currentUserName : this.UserNameUpdate;
+    this.UserEmailUpdate = this.UserEmailUpdate === null || this.UserEmailUpdate === undefined ? this.currentEmail : this.UserEmailUpdate;
+    this.UserMobileNoUpdate = this.UserMobileNoUpdate === null || this.UserMobileNoUpdate === undefined ? this.currentMobileNo : this.UserMobileNoUpdate;
+
+    alert("Are you want to Update these fields");
+    let bodyData =
+    {
+      "UserName": this.UserNameUpdate,
+      "UserEmail": this.UserEmailUpdate,
+      "UserMobileNo": this.UserMobileNoUpdate
+    };
+    this.http.put("http://localhost:8888/api/user/update" + "/" + this.currentUserID, bodyData).subscribe((resultData: any) => {
+      console.log(resultData);
+      alert("User Details Updated");
+    });
+  }
+
+  setDelete(useritem: any) {
+    this.http.delete("http://localhost:8888/api/user/delete/" + useritem.ID).subscribe((resultData: any) => {
+      alert("Are you want to delete these fields");
+      console.log(resultData);
+    });
+  }
+
+  getUserCount(): number {
+    return this.UsersArray.length;
+  }
+
+  showTableData(ID: any): void {
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+  }
+
+  shows(ID: any): void {
+    this.isEditClicked[ID] = !this.isEditClicked[ID];
+    this.idToShow = ID;
+  }
+
+  addusers() {
+    this.Openpopup(DialogcompComponent);
+  }
+
+  Openpopup(component: any) {
+    var _popup = this.dialog.open(component, {
+      width: '60%',
+      enterAnimationDuration: '1000ms',
+      exitAnimationDuration: '1000ms',
+    });
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+        
+        <form>
+          <div class="container">
+            <div class="row">
+              <!-- First Row -->
+              
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>SN</label>
+                  <input type="text" [(ngModel)]="SN" [ngModelOptions]="{standalone: true}" class="form-control" id="SN">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>MN</label>
+                  <input type="text" [(ngModel)]="MN" [ngModelOptions]="{standalone: true}" class="form-control" id="MN">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>R1</label>
+                  <input type="number" [(ngModel)]="R1" [ngModelOptions]="{standalone: true}" class="form-control" id="R1">
+                </div>
+              </div>
+              
+            </div><br><br>
+
+
+
+
+
+
+
+                    
+            <!-- Second Row -->
+            <div class="row">
+              
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>R2</label>
+                  <input type="number" [(ngModel)]="R2" [ngModelOptions]="{standalone: true}" class="form-control" id="R2">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>R3</label>
+                  <input type="number" [(ngModel)]="R3" [ngModelOptions]="{standalone: true}" class="form-control" id="R3">
+                </div>
+              </div>
+  
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>S1</label>
+                  <input type="number" [(ngModel)]="S1" [ngModelOptions]="{standalone: true}" class="form-control" id="S1">
+                </div>
+              </div>
+             
+            </div><br><br>
+        
+        
+            <!-- Third Row -->
+            <div class="row">
+              
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>S2</label>
+                  <input type="number" [(ngModel)]="S2" [ngModelOptions]="{standalone: true}" class="form-control" id="S2">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>S3</label>
+                  <input type="number" [(ngModel)]="S3" [ngModelOptions]="{standalone: true}" class="form-control" id="S3">
+                </div>
+              </div>
+  
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>DV</label>
+                  <input type="text" [(ngModel)]="DV" [ngModelOptions]="{standalone: true}" class="form-control" id="DV">
+                </div>
+              </div>
+             
+            </div><br><br>
+        
+            <!-- Fourth Row -->
+            <div class="row">
+              
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>GN</label>
+                  <input type="text" [(ngModel)]="GN" [ngModelOptions]="{standalone: true}" class="form-control" id="GN">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>CREATED BY</label>
+                  <input type="number" [(ngModel)]="created_by" [ngModelOptions]="{standalone: true}" class="form-control" id="created_by">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>LEVELS ID</label>
+                  <input type="text" [(ngModel)]="Levels_id" [ngModelOptions]="{standalone: true}" class="form-control" id="Levels_id">
+                </div>
+              </div>
+            </div>
+        
+            <!-- Button -->
+            
+            <div class="row mt-4">
+              <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary mt-4">Save</button>
+                <!-- <button type="cancel" class="btn btn-danger mt-4" (click)="cancel()">Cancel</button>(click)="save()" -->
+           
+              </div>
+            </div>
+          </div>
+  
+        </form>
+        
+      </div>
+    </div>
+  </div>
+  

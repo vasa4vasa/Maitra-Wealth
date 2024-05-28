@@ -1,0 +1,124 @@
+<div style="margin-top: 90px;" class="whole">
+<div class="w-100 h-100 p-3" style="margin-bottom: 10px;" >
+  <!-- Header -->
+  <div class="border rounded shadow-lg align-center p-1">
+    <!-- Header in the format of nav-bar -->
+    <nav class="navbar navbar-expand">
+      <!-- Container for Un-Ordered List-->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Un Ordered List -->
+        <ul class="navbar-nav">
+          <!-- List one Page heading -->
+          <li class="nav-item ml-auto mr-1">
+            <!-- to show the text -->
+            <span class="h5 fw-bolder text-dark fs-2 ps-4 call">CALLS</span>
+          </li>
+        </ul>
+        <!-- Second Un-Ordered List -->
+        <ul class="navbar-nav ms-auto">
+          <!-- list Items -->
+          <li class="nav-item position-right">
+            <!-- Button to open modal -->
+            <button mat-raised-button class="btn btn-success bg-success p-4 border border-success-subtle me-5 text-light" (click)="openPopup()">Create Calls +</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+
+
+  
+
+<div class="w-100 h-100 p-1">
+    <!-- Outer Container for Table -->
+    <div class="w-100 h-100 border rounded shadow-lg align-center p-3">
+      <!-- Inner container for table -->
+      <div class="table-responsive">
+        <!-- Table uses the datatables which is defaultly used in Angular -->
+        <table #tabledata id="tabledata" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"  mat-table  class="table mt-5 table-hover table-borderless text-center mat-elevation-z8">
+          <!-- Table Head -->
+          <thead class="border-bottom">
+            <!-- First row -->
+            <tr class="p-3">
+              <!-- Table Headings -->
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Created</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Achived</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Buy / Sell</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Type Equity</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Contract Month</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Strike Price</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Qty.</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">At Price</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Target</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Stop_Loss</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Exit Price</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Profit/Loss</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">SMS</th>
+              <th class="p-2 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">Action</th>
+            </tr>
+          </thead>
+          <!-- Table Body -->
+          <tbody>
+            <tr *ngFor="let tipsItem of TipsItems">
+              <td class="p-2 border border-1 border-opacity-10">
+                <div class="row">
+                  <div class="col">{{ tipsItem.created_on }}</div>
+                </div>
+                <div class="row border-top border-2">
+                  <div class="col">{{ tipsItem.expiry_date }}</div>
+                </div>
+              </td>
+              
+              
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.created_on }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.type }}</td> 
+              <td class="p-2 border border-1 border-opacity-10">
+                <div class="row">
+                  <div>{{ tipsItem.call_type }}</div>
+                </div>
+                <div class="row border-top border-2">
+                  <div>{{ getItemName(tipsItem.commodity) }}</div>
+                </div>
+              </td>
+             
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.expiry_date }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.strike_price }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.quantity}}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.at_price }}</td>
+              <td class= "p-2  border border-1 border-opacity-10"> {{ tipsItem.target1}} / {{ tipsItem.target2 }} / {{ tipsItem.target3 }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.stop_loss }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.exit_price }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.profit_loss }}</td>
+              <td class= "p-2  border border-1 border-opacity-10">{{ tipsItem.last_sms }}</td>
+              
+              
+              <td class="p-2 border border-1 border-opacity-10">
+                <button type="button" class="btn btn-success ms-2 mt-2" (click)="edit(tipsItem)" *ngIf="!isEditClicked[tipsItem.id]">
+             <i class="bi bi-pencil-square"></i>
+              </button>
+              
+                <button type="button" class="btn btn-dark ms-2 mt-2" *ngIf="isEditClicked[tipsItem.id]" (click)="shows(tipsItem.id)"><span><i class="bi bi-x-lg"></i></span></button> 
+                <!-- <button type="button" class="btn btn-primary ms-2 mt-2" *ngIf="isEditClicked[TipsItem.ID]" (click)="UpdateRecords(TipsItem)"><i class="bi bi-send"></i></button> -->
+                <button type="button" class="btn btn-danger ms-2 mt-2" *ngIf="!isEditClicked[tipsItem.id]" (click)="setDelete(tipsItem)"><span><i class="bi bi-trash"></i></span></button>
+                <button type="button" class="btn btn-primary ms-2 mt-2" *ngIf="!isEditClicked[tipsItem.id]" (click)="follow(tipsItem)"><span><i class="bi bi-check-lg"></i></span></button>
+
+              </td>
+              
+              
+            </tr>
+
+            
+          </tbody>
+    </table>
+    </div>
+  </div>
+  </div>
+</div>
+  <!-- npm i @mat-datetimepicker/moment -->
+  <!-- npm i @mat-datetimepicker/core   -->
+  
+    
+    
+    
+  

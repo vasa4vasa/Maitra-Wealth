@@ -1,0 +1,127 @@
+<div style="margin-top: 90px;" class="whole">
+<div class="w-100 h-100 p-3" style="margin-bottom: 0px;">
+  <!-- Header -->
+  <div class="border rounded shadow-lg align-center p-1">
+    <!-- Header in the format of nav-bar -->
+    <nav class="navbar navbar-expand">
+      <!-- Container for Un-Ordered List-->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Un Ordered List -->
+        <ul class="navbar-nav"> 
+          <!-- List one Page heading -->
+          <li class="nav-item ml-auto mr-1">
+            <!-- to show the text -->
+            <span class="h5 fw-bolder text-dark fs-2 ps-4">LEVELS</span>
+          </li>
+        </ul>
+        <!-- Second Un-Ordered List -->
+        <ul class="navbar-nav ms-auto">
+          <!-- list Items -->
+          <li class="nav-item position-right">
+            <!-- Button to open modal -->
+            <button mat-raised-button class="btn btn-success bg-success p-4 border border-success-subtle me-5 text-light" (click)="addLevels()">Create New +</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+
+ 
+  <div style="margin-top: 0%;">
+  <div class=" h-100 p-3">
+    <!-- Outer Container for Table -->
+    <div class="w-100 h-100 border rounded shadow-lg align-center p-3">
+      <!-- Inner container for table -->
+      <div class="table-responsive">
+        
+        <table #tabledata id="tabledata" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" mat-table  class="table mt-5 table-hover table-borderless text-center" >
+          <thead class="border-bottom">
+            <!-- First row -->
+            <tr class="p-3">
+              <!-- Table Headings -->
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">ID</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">TV</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">SN</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">MN</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">R1</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">R2</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">R3</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">S1</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">S2</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">S3</th>
+              <!-- <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">DV</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">GN</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">CREATED ON</th> -->
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">UPDATED ON</th>
+              <!-- <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">CREATED BY</th>
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell" scope="col">LEVELS ID</th> -->
+      
+              <th class="p-3 border border-right-4 bg-warning border-right-primary text-center d-md-table-cell">EDIT THE TABLE</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <tr class="border-bottom" *ngFor="let TipsItem of LevelsArray">
+  
+              <td class="p-3 border border-1 border-opacity-10" scope="row">{{TipsItem.ID}}</td>
+  
+              <td class="p-3 border border-1 border-opacity-10" scope="row">{{TipsItem.TV}}</td>
+  
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.SN}}<br>
+               
+              </td>
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.MN}}<br>
+               
+              </td>
+  
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.R1}}<br>
+  
+              </td>
+              
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.R2}}<br>
+              
+              </td>
+  
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.R3}}<br>
+            
+              </td>
+  
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.S1}}<br>
+                
+              </td>
+              
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.S2}}<br>
+                
+              </td>
+  
+              <td class= "p-3  border border-1 border-opacity-10">{{TipsItem.S3}}<br>
+                
+              </td>
+  
+              <td class="p-3 border border-1 border-opacity-10" scope="row">{{transformDate(TipsItem.updated_on)}}</td>
+
+  
+            
+              <td class="p-2 border border-1 border-opacity-10">
+                <button type="button" class="btn btn-success mt-2" (click)="edit(TipsItem)" *ngIf="!isEditClicked[TipsItem.ID]">
+             <i class="bi bi-pencil-square"></i>
+              </button>
+              
+                <button type="button" class="btn btn-dark ms-2 mt-2" *ngIf="isEditClicked[TipsItem.ID]" (click)="shows(TipsItem.ID)"><span><i class="bi bi-x-lg"></i></span></button> 
+                <button type="button" class="btn btn-primary ms-2 mt-2" *ngIf="isEditClicked[TipsItem.ID]" (click)="Editpopup(TipsItem)"><i class="bi bi-send"></i></button>
+                <button type="button" class="btn btn-danger ms-2 mt-2" *ngIf="!isEditClicked[TipsItem.ID]" (click)="setDelete(TipsItem)"><span><i class="bi bi-trash"></i></span></button>
+              </td>
+              
+            </tr>  
+  
+  
+  
+  
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>  
+  </div>

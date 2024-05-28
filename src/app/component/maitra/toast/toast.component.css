@@ -1,0 +1,12 @@
+p {
+    margin-top: 8%;
+    margin-bottom: 8%;
+    font-size:larger;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+}
+button{
+    width:100%;
+    font-size:medium;
+    font-family: 'Poppins', sans-serif;
+}

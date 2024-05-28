@@ -1,0 +1,8 @@
+<div>
+    <p>{{ message }}</p>
+  </div>
+
+  <div mat-dialog-actions>
+    <button class="can" mat-button (click)="onCancelClick()">No</button>
+    <button class="sub" mat-button [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+  </div>

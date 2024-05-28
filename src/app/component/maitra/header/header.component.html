@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="background: linear-gradient(to Left, #2b0397, #000000);">
+    <div class="container-fluid">
+        <a class="navbar-brand me-auto text-white" href="#">
+            <img src="assets/thumbb.png" alt="" width="100" height="65">
+            <span class="d-inline-block align-text-center d-none d-lg-inline">MAITRA WEALTH</span>
+        </a>
+        <div class="order-lg-2 ms-auto">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="#navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='dashboard'}" (click)="setActiveItem('dashboard')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" [routerLink]="['./dash']">Dashboard</a>
+            </li>
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='users'}" (click)="setActiveItem('users')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" [routerLink]="['./users']">Users</a>
+            </li>
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='tips'}" (click)="setActiveItem('tips')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" [routerLink]="['./tips']">Calls</a>
+            </li>
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='levels'}" (click)="setActiveItem('levels')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" [routerLink]="['./levels']">Levels</a>
+            </li>
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='message'}" (click)="setActiveItem('message')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show" [routerLink]="['./message']">Message</a>
+            </li>
+            <li class="nav-item" [ngClass]="{ 'active' : activeItem ==='about'}" (click)="setActiveItem('about')">
+              <a class="nav-link mx-lg-2 text-white" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">About</a>
+            </li>
+          </ul>
+          <div class="d-grid gap-2">
+            <a class="btn btn-lg btn-outline-light rounded-5 fs-6" (click)="logout()" id="logout-button">Logout</a>
+          </div>
+        </div> 
+    </div>
+</nav>

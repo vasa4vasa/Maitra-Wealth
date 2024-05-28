@@ -1,0 +1,49 @@
+
+input{
+  width: 100%;
+}
+.title{
+text-align: center;
+}
+
+.content{
+  padding: 100px;
+  align-items: center;
+  margin: auto;
+  width : 50%;
+}
+
+
+.button-container{
+ margin: auto;
+}
+.dialog-overlay {
+  position: fixed;
+  background-size: cover;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+}
+.front {
+position: fixed;
+top : 10%;
+left :20%;
+width: 60%;
+height: 40%;
+}
+.example-right-align {
+  text-align: right;
+}
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+
+
+
